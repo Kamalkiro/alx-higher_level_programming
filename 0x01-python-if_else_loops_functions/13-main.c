@@ -27,7 +27,7 @@ int main(void)
 
 	insert_node(&head, 27);
 
-    	print_listint(head);
+	print_listint(head);
 
 	free_listint(head);
 
