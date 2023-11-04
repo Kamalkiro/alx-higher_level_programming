@@ -1,11 +1,14 @@
 #!/usr/bin/python3
-from sys import argv
-say_my_name = __import__('3-say_my_name').say_my_name
+"""
+This is the "3-say_my-name" module.
+The 3-say_my_name  module supplies one function, say_my_name.
+"""
 
-if __name__ == "__main__":
-    if len(argv) == 3:
-        say_my_name(argv[1], argv[2])
-    elif len(argv) == 2:
-        say_my_name(argv[1])
-    else:
-        print("Usage: ./3-main.py <first name> <last name>")
+
+def say_my_name(first_name, last_name=""):
+    """Prints "My name is" followed by the first name and optional last name"""
+    if type(first_name) is not str:
+        raise TypeError("first_name must be a string")
+    if type(last_name) is not str:
+        raise TypeError("last_name must be a string")
+    print("My name is", first_name, last_name)
