@@ -3,6 +3,7 @@
 This script defines a function for matrix division.
 """
 
+
 def matrix_divided(matrix, div):
     """
     Divide all elements of a matrix.
@@ -21,12 +22,12 @@ def matrix_divided(matrix, div):
         A new matrix representing the result of the division.
     """
 
-    # Check if matrix is a list of non-empty lists containing only integers or floats
+    # Check if matrix is a list of non-empty lists containing only integers
     if (not isinstance(matrix, list) or matrix == [] or
             not all(isinstance(row, list) for row in matrix) or
             not all((isinstance(ele, int) or isinstance(ele, float))
                     for ele in [num for row in matrix for num in row])):
-        raise TypeError("matrix must be a matrix (list of lists) of integers/floats")
+        raise TypeError("matrix must be a matrix (list of lists) of integers")
 
     # Check if all rows have the same size
     if not all(len(row) == len(matrix[0]) for row in matrix):
