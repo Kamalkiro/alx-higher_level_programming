@@ -1,107 +1,100 @@
 #!/usr/bin/python3
 from sys import argv
+
 class Queens:
 	def __init__(self, position):
 		self.position = position
+
 	def moves(self, position, places):
 		row, column = self.position
-		moves = []
+		moves = set()
+
 		for i in range(places):
-			li = row, i
-			moves.append(li)
-		for j in range(places):
-			li = j, column
-			moves.append(li)
+			moves.add((row, i))  
+			moves.add((i, column)) 
 		r, c = row, column
 		while r >= 0 and c >= 0:
-			if r == 0 or c == 0:
-				break
+			moves.add((r, c))
 			r -= 1
 			c -= 1
-			li = r, c
-			moves.append(li)
-		r, c = row, column
-		while r < places and c >= 0:
-			if r + 1 == places or c == 0:
-				break
-			r += 1
-			c -= 1
-			li = r, c
-			moves.append(li)
-		r, c = row, column
-		while c < places and r >= 0:
-			if r == 0 or c + 1 == places:
-				break
-			r -= 1
-			c += 1
-			li = r, c
-			moves.append(li)
-		r, c = row, column
-		while c < places and r < places:
-			if r + 1 == places or c + 1 == places:
-				break
-			r += 1
-			c += 1
-			li = r, c
-			moves.append(li)
-		return set(moves)
 
-def check(j, i, n):
-	alen = []
-	x = j.copy()
-	q = Queens(i)
-	x += q.moves(i, n)
-	z = i[0] + 1
-	for d in range(n):
-		jiji = z, d
-		alen.append(jiji)
-	for jij in alen:
-		if jij not in x:
-			return True
-	return False
-def comparequeens(mov, n):
-	res = []
-	j = []
-	for i in mov:
-		if i not in j and check(j, i, n):
-			q = Queens(i)
-			j += q.moves(i, n)
-			res.append(i)
-	return res
-		
+		r, c = row, column
+		while r < places and c >= 0: 
+			moves.add((r, c))
+			r += 1
+			c -= 1
+
+		r, c = row, column
+		while r >= 0 and c < places:
+			moves.add((r, c))
+			r -= 1
+			c += 1
+
+		r, c = row, column
+		while r < places and c < places:  
+			moves.add((r, c))
+			r += 1
+			c += 1
+
+		return moves
+
+def solve_nqueens(n):
 	
+	column_set = set()
+	diag1_set = set()  
+	diag2_set = set()  
 
-def passpositions(movelist, places):
-	it = 0
 	result = []
-	while it < places * places:
-		it += 1
-		result = comparequeens(movelist, places)
-		movelist = movelist[1:]
-		if (len(result) == places):
-			print(result)
-		
-def getpositions(places):
-	firstop = []
-	for i in range(places):
-		for j in range(places):
-			li = i, j
-			firstop.append(li)
-	return firstop
+
+	def backtrack(row, current_board):
+		if row == n:
+			result.append(current_board[:])
+			return
+	
+		for col in range(n):
+			if col in column_set or (row - col) in diag1_set or (row + col) in diag2_set:
+				continue 
+			queen = Queens((row, col))
+			attacked_positions = queen.moves((row, col),n)
+
+			if all((r, c) not in attacked_positions for r, c in current_board):
+				column_set.add(col)
+				diag1_set.add(row - col)
+				diag2_set.add(row + col)
+
+				current_board.append((row, col))
+
+				backtrack(row + 1, current_board)
+
+				current_board.pop()
+				column_set.remove(col)
+				diag1_set.remove(row - col)
+				diag2_set.remove(row + col)
+
+	backtrack(0, [])
+	return result
+
+def print_solutions(solutions):
+	for solution in solutions:
+		solution = [list(res) for res in solution]
+		print(solution)
+
 if len(argv) > 2:
 	print("Usage: nqueens N")
 	exit(1)
+
 places = int(argv[1])
+
 if not isinstance(places, int):
 	print("N must be a number")
 	exit(1)
+
 if places < 4:
 	print("N must be at least 4")
 	exit(1)
-firstop = getpositions(places)
-moves = passpositions(firstop, places)
 
-	
+solutions = solve_nqueens(places)
+print_solutions(solutions)
 
 
 
